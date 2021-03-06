@@ -10,7 +10,7 @@ import mongoose from 'mongoose';
 
 const catSchema = new mongoose.Schema({
   imageUrl: {
-    required: true,
+    required: [true, 'Please provide an url'],
     type: String,
   },
   name: {

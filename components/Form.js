@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Form = ({ catForm }) => {
+  const [message, setMessage] = useState("");
   const [cat, setCat] = useState(
     catForm ?? {
       imageUrl: "",
@@ -14,9 +15,11 @@ const Form = ({ catForm }) => {
 
   console.log("Form", cat);
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
-      const response = fetch("/api/cat", {
+      const response = await fetch("/api/cat", {
         body: JSON.stringify(cat),
         headers: {
           Accept: "application/json",
@@ -24,9 +27,13 @@ const Form = ({ catForm }) => {
         },
         method: "POST",
       });
+      const json = await response.json();
+
+      console.log("json", json);
 
       if (!response.ok) {
-        throw new Error("New cat creation failed");
+        setMessage(json.message);
+        throw new Error(json.message);
       }
 
       router.push("/");
@@ -78,9 +85,17 @@ const Form = ({ catForm }) => {
             value={cat.imageUrl}
           />
         </div>
+        <div className="form-line">
+          <code>{message}</code>
+        </div>
+
+        <button className="btn" onClick={handleSubmit} type="submit">
+          Submit
+        </button>
+        <hr />
         <Link href="/">
-          <button className="btn" onClick={handleSubmit} type="submit">
-            Submit
+          <button className="btn" type="button">
+            Home
           </button>
         </Link>
       </form>
