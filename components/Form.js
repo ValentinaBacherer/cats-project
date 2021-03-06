@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Form = ({ catForm }) => {
+  const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [cat, setCat] = useState(
     catForm ?? {
@@ -13,32 +14,50 @@ const Form = ({ catForm }) => {
   );
   const router = useRouter();
 
-  console.log("Form", cat);
+  const validateFields = () => {
+    const err = {};
+
+    if (!cat.name) err.name = "Please provide a name";
+
+    if (cat.species.length < 3) err.species = "Please provide a specie";
+
+    if (cat.imageUrl.length < 5) err.imageUrl = "Please provide an imageUrl";
+
+    return err; // why this cant setErrors()?
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const onSubmitErrors = validateFields();
 
-    try {
-      const response = await fetch("/api/cat", {
-        body: JSON.stringify(cat),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      });
-      const json = await response.json();
+    if (Object.keys(onSubmitErrors).length === 0) {
+      setErrors({});
 
-      console.log("json", json);
+      try {
+        const response = await fetch(process.env.NEXT_PUBLIC_CAT_API, {
+          body: JSON.stringify(cat),
+          headers: {
+            Accept: process.env.NEXT_PUBLIC_CONTENT,
+            "Content-Type": process.env.NEXT_PUBLIC_CONTENT,
+          },
+          method: "POST",
+        });
+        const json = await response.json();
 
-      if (!response.ok) {
-        setMessage(json.message);
-        throw new Error(json.message);
+        console.log("json", json);
+
+        if (!response.ok) {
+          setMessage(json.message);
+          throw new Error(json.message);
+        }
+
+        router.push("/");
+      } catch (error) {
+        console.error(`${error.name}: ${error.message}`);
       }
-
-      router.push("/");
-    } catch (error) {
-      console.error(`${error.name}: ${error.message}`);
+    } else {
+      setMessage("");
+      setErrors(onSubmitErrors);
     }
   };
 
@@ -88,7 +107,16 @@ const Form = ({ catForm }) => {
         <div className="form-line">
           <code>{message}</code>
         </div>
-
+        {Object.keys(errors).map((err, index) => {
+          return (
+            <li key={index}>
+              <code>
+                {err} : {errors[err]}
+              </code>
+            </li>
+          );
+        })}
+        <hr />
         <button className="btn" onClick={handleSubmit} type="submit">
           Submit
         </button>

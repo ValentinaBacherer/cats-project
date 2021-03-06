@@ -15,6 +15,11 @@
   justify-content: center;
   align-items: center;
 }
+.cardImage {
+  height: calc(100% - 6.8rem);
+  width: 100%;
+  object-fit: cover;
+}
 
 .footer {
   width: 100%;
@@ -72,17 +77,16 @@
 }
 
 .grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-gap: 2rem;
+  width: 100%;
+  max-width: 1000px;
   margin-top: 3rem;
 }
 
 .card {
   margin: 1rem;
-  flex-basis: 45%;
   padding: 1.5rem;
   text-align: left;
   color: inherit;

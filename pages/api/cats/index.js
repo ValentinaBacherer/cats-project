@@ -2,7 +2,7 @@ import Cat from "../../../models/Cat";
 import dbConnect from "../../../utils/dbConnect";
 
 const handler = async (req, res) => {
-  console.log("req", req.body);
+  console.log("En API /api/cats", req.method);
   const method = req.method;
 
   await dbConnect();
@@ -26,8 +26,33 @@ const handler = async (req, res) => {
       }
 
       break;
+    case "GET":
+      console.log("API get");
+
+      try {
+        const response = await Cat.find({});
+        const cats = response.map((doc) => {
+          const cat = doc.toObject();
+
+          cat._id = cat._id.toString();
+
+          return cat;
+        });
+
+        res.status(200).json({
+          data: cats,
+          succes: true,
+        });
+      } catch (error) {
+        res.status(400).json({
+          message: error.message,
+          success: false,
+        });
+      }
+
+      break;
     default:
-      res.status(400).json({ name: "vale" });
+      res.status(400).json({ message: "Default switch error" });
   }
 };
 
