@@ -7,9 +7,48 @@
     "build": "next build",
     "start": "next start"
   },
+  "eslintConfig": {
+    "extends": [
+      "get-off-my-lawn",
+      "prettier"
+    ],
+    "rules": {
+      "react/display-name": 0,
+      "react/react-in-jsx-scope": 0,
+      "react/jsx-no-literals": 0,
+      "no-param-reassign": 0,
+      "node/no-unpublished-require": 0,
+      "jsx-a11y/anchor-is-valid": 0,
+      "no-unused-vars": 0,
+      "no-console": 0,
+      "camelcase": 0,
+      "react/no-array-index-key": 0,
+      "eslint-comments/disable-enable-pair": 0
+    }
+  },
+  "lint-staged": {
+    "pages/**/*.{js,jsx,ts,tsx,json,css,scss,md}": "prettier --write",
+    "components/**/*.{js,jsx,ts,tsx,json,css,scss,md}": "prettier --write"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "dependencies": {
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.18",
     "next": "10.0.7",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-router-dom": "^5.2.0",
+    "swr": "^0.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-config-get-off-my-lawn": "^5.0.1",
+    "husky": "^4.3.8",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1"
   }
 }
