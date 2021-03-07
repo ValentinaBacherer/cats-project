@@ -23,6 +23,16 @@ const fetchCats = async () => {
 
 const Home = ({ catsList, ...props }) => {
   const [cats, setCats] = useState(catsList ?? []);
+  const [filter, setFilter] = useState("");
+
+  const filterItems = (e) => {
+    setFilter(e.target.value);
+    const newCats = catsList.filter((cat) =>
+      cat.name.toLowerCase().startsWith(e.target.value.toLowerCase())
+    );
+
+    setCats(newCats);
+  };
 
   return (
     <div className={styles.container}>
@@ -32,7 +42,15 @@ const Home = ({ catsList, ...props }) => {
           We have reached a collection of {cats.length} lovely cats so far!{" "}
         </p>
         <p>(Would you help us to find some more?)</p>
-
+        <div className={styles.card}>
+          <label htmlFor="filter">Filter by name</label>
+          <input
+            id="filter"
+            onChange={filterItems}
+            type="text"
+            value={filter}
+          />
+        </div>
         <div className={styles.grid}>
           {cats.map((cat) => {
             return (

@@ -8,7 +8,7 @@
 }
 
 .main {
-  padding: 5rem 0;
+  padding: 3rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -17,8 +17,9 @@
 }
 .cardImage {
   height: calc(100% - 6.8rem);
+  max-height: 400px;
   width: 100%;
-  object-fit: cover;
+  object-fit: scale-down;
 }
 
 .footer {
@@ -82,7 +83,7 @@
   grid-gap: 2rem;
   width: 100%;
   max-width: 1000px;
-  margin-top: 3rem;
+  margin-top: 1rem;
 }
 
 .card {
