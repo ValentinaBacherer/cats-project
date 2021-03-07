@@ -1,15 +1,10 @@
-import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 
 import { server } from "../config";
-import dbConnect from "../utils/dbConnect";
 import styles from "../styles/Home.module.css";
-import Header from "../components/Header";
 
 const fetchCats = async () => {
-  console.log("In fetch cats");
-
   try {
     const response = await fetch(`${server}${process.env.NEXT_PUBLIC_CAT_API}`);
     const json = await response.json();
@@ -26,31 +21,23 @@ const fetchCats = async () => {
   return undefined;
 };
 
-const Home = ({ catsList, message }) => {
+const Home = ({ catsList, ...props }) => {
   const [cats, setCats] = useState(catsList ?? []);
-
-  console.log("Home render", cats.length);
 
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Cats App</title>
-        <link href="/favicon.ico" rel="icon" />
-      </Head>
-      <Header />
-
       <main className={styles.main}>
         <h1 className={styles.title}>Welcome to Cats App</h1>
-
         <p className={styles.description}>
           We have reached a collection of {cats.length} lovely cats so far!{" "}
         </p>
         <p>(Would you help us to find some more?)</p>
+
         <div className={styles.grid}>
           {cats.map((cat) => {
             return (
               <Link as={`/${cat._id}`} href="/[id]/" key={cat._id}>
-                <div className={styles.card} href="" target="_blank">
+                <div className={styles.card}>
                   <img
                     alt={cat.name}
                     className={styles.cardImage}
@@ -64,28 +51,11 @@ const Home = ({ catsList, message }) => {
           })}
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Powered by{" "}
-          <img alt="Vercel Logo" className={styles.logo} src="/vercel.svg" />
-        </a>
-      </footer>
     </div>
   );
 };
 
-export default Home;
-
 export const getServerSideProps = async (context) => {
-  await dbConnect();
-  // context parameter (object)
-  console.log("gSSP", context.resolvedUrl);
-
   const fetchedCats = await fetchCats();
 
   return {
@@ -95,3 +65,5 @@ export const getServerSideProps = async (context) => {
     },
   };
 };
+
+export default Home;

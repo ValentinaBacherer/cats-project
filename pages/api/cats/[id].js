@@ -9,6 +9,25 @@ const handler = async (req, res) => {
   await dbConnect();
 
   switch (method) {
+    case "GET":
+      try {
+        const foundCat = await Cat.findById(id).lean();
+
+        foundCat._id = foundCat._id.toString();
+
+        res.status(200).json({
+          data: foundCat,
+          message: "Cat Found",
+          success: true,
+        });
+      } catch (error) {
+        res.status(400).json({
+          message: "Cat not found",
+          success: false,
+        });
+      }
+
+      break;
     case "PUT":
       try {
         const cat = await Cat.findByIdAndUpdate(id, req.body, {

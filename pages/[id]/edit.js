@@ -1,9 +1,7 @@
 /* eslint-disable get-off-my-lawn/prefer-arrow-functions */
-import Head from "next/head";
 
 import dbConnect from "../../utils/dbConnect";
 import Cat from "../../models/Cat";
-import Header from "../../components/Header";
 import Form from "../../components/Form";
 
 const EditCat = ({ cat }) => {
@@ -11,16 +9,14 @@ const EditCat = ({ cat }) => {
 
   return (
     <div className="container">
-      <Head>
-        <title>Cats App</title>
-        <link href="/favicon.ico" rel="icon" />
-      </Head>
-      <Header />
-
       <main className="main">
-        <h1 className="title">Welcome to Cats App</h1>
-        <p className="description">Detailed view of {cat.name}</p>
-        <Form catForm={cat} newCat={false} />
+        <h1 className="title">Cats App</h1>
+        <p className="description">
+          You can edit <strong>{cat.name}&apos;s</strong> data bellow.
+        </p>
+        <div className="form">
+          <Form catForm={cat} newCat={false} />
+        </div>
       </main>
     </div>
   );
@@ -38,7 +34,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       cat: catFound,
-      message: "we succeed",
+      message: "Miau, we succeed",
     },
   };
 }

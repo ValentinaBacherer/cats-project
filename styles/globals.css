@@ -26,14 +26,16 @@ header {
 }
 
 .form-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 1rem;
 }
+.form-line label {
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
 .container {
   min-height: 100vh;
-  padding: 0 0.5rem;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -49,6 +51,11 @@ header {
   align-items: center;
 }
 
+.cardImage {
+  height: calc(100% - 6.8rem);
+  width: 100%;
+  object-fit: cover;
+}
 .footer {
   width: 100%;
   height: 100px;
@@ -105,15 +112,23 @@ header {
 }
 
 .grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-gap: 2rem;
+  width: 100%;
+  max-width: 1000px;
   margin-top: 3rem;
 }
+.form {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 1rem;
+}
+
 input {
-  min-width: 250px;
+  width: 100%;
   padding: 0.5rem;
 }
 .btn {
@@ -123,11 +138,19 @@ input {
 
 .card {
   margin: 1rem;
-  min-width: 400px;
   padding: 1.5rem;
   text-align: left;
   color: inherit;
   text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.form-card {
+  min-width: 550px;
+  padding: 1.5rem;
+  text-align: left;
+  color: inherit;
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
@@ -152,7 +175,12 @@ input {
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
 }
-
+.preview {
+  width: 40%;
+  margin-left: 30%;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+}
 .card p {
   margin: 0;
   font-size: 1.25rem;
@@ -163,9 +191,12 @@ input {
   height: 1em;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .grid {
-    width: 100%;
-    flex-direction: column;
+    width: 90%;
+    grid-template-columns: 1fr;
+  }
+  .form-card {
+    min-width: 85vw;
   }
 }

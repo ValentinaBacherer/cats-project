@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 const Form = ({ catForm, newCat = true }) => {
@@ -23,12 +22,10 @@ const Form = ({ catForm, newCat = true }) => {
 
     if (cat.imageUrl.length < 5) err.imageUrl = "Please provide an imageUrl";
 
-    return err; // why this cant setErrors()?
+    return err; // why this can't setErrors()?
   };
 
   const deleteCat = async () => {
-    console.log("deleteCat");
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_CAT_API}/${cat._id}`,
@@ -51,9 +48,8 @@ const Form = ({ catForm, newCat = true }) => {
   };
 
   const handleDelete = () => {
-    console.log("handle delete cat", newCat);
     // eslint-disable-next-line no-unused-expressions
-    newCat ? console.log("delete new") : deleteCat();
+    newCat ? router.push("/") : deleteCat();
   };
 
   const createCat = async () => {
@@ -68,8 +64,6 @@ const Form = ({ catForm, newCat = true }) => {
       });
       const json = await response.json();
 
-      console.log("json", json);
-
       if (!response.ok) {
         setMessage(json.message);
         throw new Error(json.message);
@@ -82,8 +76,6 @@ const Form = ({ catForm, newCat = true }) => {
   };
 
   const updateCat = async () => {
-    console.log("update cat");
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_CAT_API}/${cat._id}`,
@@ -97,8 +89,6 @@ const Form = ({ catForm, newCat = true }) => {
         }
       );
       const json = await response.json();
-
-      console.log("updateCat", json.message);
 
       if (!response.ok) {
         setMessage(json.message);
@@ -140,8 +130,11 @@ const Form = ({ catForm, newCat = true }) => {
   };
 
   return (
-    <div className="card" id="form-container">
+    <div className="form-card" id="form-container">
       <form id="cat-form">
+        <div className="form-line">
+          <img alt="" className="preview" src={cat.imageUrl} />
+        </div>
         <div className="form-line">
           <label htmlFor="cat-name">Name</label>
           <input

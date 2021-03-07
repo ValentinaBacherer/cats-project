@@ -1,34 +1,22 @@
-import { useState } from "react";
-import Head from "next/head";
 import Link from "next/link";
 
-import Header from "../../components/Header";
 import Cat from "../../models/Cat";
 import dbConnect from "../../utils/dbConnect";
 
 const CatDetails = (props) => {
-  const [cat, SetCat] = useState(
-    props.cat ?? {
-      _id: "asd",
-      imageUrl:
-        "https://m.media-amazon.com/images/I/81MJeBwW-JL._AC_UL640_FMwebp_QL65_.jpg",
-      name: "misifus",
-      species: "Felis catus domesticus",
-    }
-  );
+  const cat = props.cat ?? {
+    name: "missing cat",
+  };
 
   return (
     <div className="container">
-      <Head>
-        <title>Cats App</title>
-        <link href="/favicon.ico" rel="icon" />
-      </Head>
-      <Header />
-
       <main className="main">
-        <h1 className="title">Welcome to Cats App</h1>
+        <h1 className="title">Cats App</h1>
 
-        <p className="description">Detailed view of {cat.name}</p>
+        <p className="description">
+          Detailed view of <strong>{cat.name}</strong>, one of our{" "}
+          <em>favorite</em> cats.
+        </p>
 
         <div className="grid">
           <div className="card" href="" target="_blank">

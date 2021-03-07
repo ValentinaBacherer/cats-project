@@ -12,8 +12,6 @@ const handler = async (req, res) => {
       try {
         const newCat = await Cat.create(req.body);
 
-        console.log("Creating newCat", newCat.name);
-
         res.status(200).json({
           newCat,
           succes: true,
@@ -27,8 +25,6 @@ const handler = async (req, res) => {
 
       break;
     case "GET":
-      console.log("API get");
-
       try {
         const response = await Cat.find({});
         const cats = response.map((doc) => {
