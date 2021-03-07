@@ -2,7 +2,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const Form = ({ catForm }) => {
+const Form = ({ catForm, newCat = true }) => {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [cat, setCat] = useState(
@@ -26,34 +26,102 @@ const Form = ({ catForm }) => {
     return err; // why this cant setErrors()?
   };
 
-  const handleSubmit = async (e) => {
+  const deleteCat = async () => {
+    console.log("deleteCat");
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_CAT_API}/${cat._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        setMessage(json.message);
+        throw new Error(json.message);
+      }
+
+      router.push("/");
+    } catch (error) {
+      console.error(`${error.name}: ${error.message}`);
+    }
+  };
+
+  const handleDelete = () => {
+    console.log("handle delete cat", newCat);
+    // eslint-disable-next-line no-unused-expressions
+    newCat ? console.log("delete new") : deleteCat();
+  };
+
+  const createCat = async () => {
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_CAT_API, {
+        body: JSON.stringify(cat),
+        headers: {
+          Accept: process.env.NEXT_PUBLIC_CONTENT,
+          "Content-Type": process.env.NEXT_PUBLIC_CONTENT,
+        },
+        method: "POST",
+      });
+      const json = await response.json();
+
+      console.log("json", json);
+
+      if (!response.ok) {
+        setMessage(json.message);
+        throw new Error(json.message);
+      }
+
+      router.push("/");
+    } catch (error) {
+      console.error(`${error.name}: ${error.message}`);
+    }
+  };
+
+  const updateCat = async () => {
+    console.log("update cat");
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_CAT_API}/${cat._id}`,
+        {
+          body: JSON.stringify(cat),
+          headers: {
+            Accept: process.env.NEXT_PUBLIC_CONTENT,
+            "Content-Type": process.env.NEXT_PUBLIC_CONTENT,
+          },
+          method: "PUT",
+        }
+      );
+      const json = await response.json();
+
+      console.log("updateCat", json.message);
+
+      if (!response.ok) {
+        setMessage(json.message);
+        throw new Error(json.message);
+      }
+
+      router.push("/");
+    } catch (error) {
+      console.error(`${error.name}: ${error.message}`);
+    }
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     const onSubmitErrors = validateFields();
 
     if (Object.keys(onSubmitErrors).length === 0) {
       setErrors({});
 
-      try {
-        const response = await fetch(process.env.NEXT_PUBLIC_CAT_API, {
-          body: JSON.stringify(cat),
-          headers: {
-            Accept: process.env.NEXT_PUBLIC_CONTENT,
-            "Content-Type": process.env.NEXT_PUBLIC_CONTENT,
-          },
-          method: "POST",
-        });
-        const json = await response.json();
-
-        console.log("json", json);
-
-        if (!response.ok) {
-          setMessage(json.message);
-          throw new Error(json.message);
-        }
-
-        router.push("/");
-      } catch (error) {
-        console.error(`${error.name}: ${error.message}`);
+      if (newCat) {
+        createCat();
+      } else {
+        updateCat();
       }
     } else {
       setMessage("");
@@ -121,11 +189,9 @@ const Form = ({ catForm }) => {
           Submit
         </button>
         <hr />
-        <Link href="/">
-          <button className="btn" type="button">
-            Home
-          </button>
-        </Link>
+        <button className="btn" onClick={handleDelete} type="button">
+          Delete
+        </button>
       </form>
     </div>
   );

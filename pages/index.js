@@ -29,7 +29,7 @@ const fetchCats = async () => {
 const Home = ({ catsList, message }) => {
   const [cats, setCats] = useState(catsList ?? []);
 
-  console.log("Home render", cats);
+  console.log("Home render", cats.length);
 
   return (
     <div className={styles.container}>
@@ -49,7 +49,7 @@ const Home = ({ catsList, message }) => {
         <div className={styles.grid}>
           {cats.map((cat) => {
             return (
-              <Link href="/new" key={cat._id}>
+              <Link as={`/${cat._id}`} href="/[id]/" key={cat._id}>
                 <div className={styles.card} href="" target="_blank">
                   <img
                     alt={cat.name}
