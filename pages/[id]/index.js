@@ -15,7 +15,7 @@ const CatDetails = (props) => {
 
         <p className="description">
           Detailed view of <strong>{cat.name}</strong>, one of our{" "}
-          <em>favorite</em> cats.
+          <em>favourite</em> cats.
         </p>
 
         <div className="grid">
@@ -43,7 +43,6 @@ export async function getServerSideProps(context) {
   const foundCat = await Cat.findById(id).lean();
 
   foundCat._id = foundCat._id.toString();
-  console.log("Cat", foundCat);
 
   return {
     props: {

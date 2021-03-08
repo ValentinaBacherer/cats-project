@@ -61,8 +61,8 @@ const Home = ({ catsList, ...props }) => {
                     className={styles.cardImage}
                     src={cat.imageUrl}
                   />
-                  <h3>{cat.name} &rarr;</h3>
-                  <p>Find more &#47;&gt;</p>
+                  <h3>{cat.name} </h3>
+                  <p>Find more &rarr;</p>
                 </div>
               </Link>
             );
