@@ -1,4 +1,3 @@
-import Header from "../components/Header";
 import Form from "../components/Form";
 
 const NewCat = () => {
@@ -10,7 +9,6 @@ const NewCat = () => {
 
   return (
     <>
-      <Header />
       <div className="container">
         <div className="grid">
           <Form catForm={emptyCat} />

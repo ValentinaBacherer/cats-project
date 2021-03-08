@@ -1,8 +1,9 @@
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
-const Form = ({ catForm }) => {
+const Form = ({ catForm, newCat = true }) => {
+  const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
   const [cat, setCat] = useState(
     catForm ?? {
       imageUrl: "",
@@ -12,26 +13,109 @@ const Form = ({ catForm }) => {
   );
   const router = useRouter();
 
-  console.log("Form", cat);
+  const validateFields = () => {
+    const err = {};
 
-  const handleSubmit = () => {
+    if (!cat.name) err.name = "Please provide a name";
+
+    if (cat.species.length < 3) err.species = "Please provide a specie";
+
+    if (cat.imageUrl.length < 5) err.imageUrl = "Please provide an imageUrl";
+
+    return err; // why this can't setErrors()?
+  };
+
+  const deleteCat = async () => {
     try {
-      const response = fetch("/api/cat", {
-        body: JSON.stringify(cat),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_CAT_API}/${cat._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const json = await response.json();
 
       if (!response.ok) {
-        throw new Error("New cat creation failed");
+        setMessage(json.message);
+        throw new Error(json.message);
       }
 
       router.push("/");
     } catch (error) {
       console.error(`${error.name}: ${error.message}`);
+    }
+  };
+
+  const handleDelete = () => {
+    // eslint-disable-next-line no-unused-expressions
+    newCat ? router.push("/") : deleteCat();
+  };
+
+  const createCat = async () => {
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_CAT_API, {
+        body: JSON.stringify(cat),
+        headers: {
+          Accept: process.env.NEXT_PUBLIC_CONTENT,
+          "Content-Type": process.env.NEXT_PUBLIC_CONTENT,
+        },
+        method: "POST",
+      });
+      const json = await response.json();
+
+      if (!response.ok) {
+        setMessage(json.message);
+        throw new Error(json.message);
+      }
+
+      router.push("/");
+    } catch (error) {
+      console.error(`${error.name}: ${error.message}`);
+    }
+  };
+
+  const updateCat = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_CAT_API}/${cat._id}`,
+        {
+          body: JSON.stringify(cat),
+          headers: {
+            Accept: process.env.NEXT_PUBLIC_CONTENT,
+            "Content-Type": process.env.NEXT_PUBLIC_CONTENT,
+          },
+          method: "PUT",
+        }
+      );
+      const json = await response.json();
+
+      if (!response.ok) {
+        setMessage(json.message);
+        throw new Error(json.message);
+      }
+
+      router.push("/");
+    } catch (error) {
+      console.error(`${error.name}: ${error.message}`);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const onSubmitErrors = validateFields();
+
+    if (Object.keys(onSubmitErrors).length === 0) {
+      setErrors({});
+
+      if (newCat) {
+        createCat();
+      } else {
+        updateCat();
+      }
+    } else {
+      setMessage("");
+      setErrors(onSubmitErrors);
     }
   };
 
@@ -46,8 +130,11 @@ const Form = ({ catForm }) => {
   };
 
   return (
-    <div className="card" id="form-container">
+    <div className="form-card" id="form-container">
       <form id="cat-form">
+        <div className="form-line">
+          <img alt="" className="preview" src={cat.imageUrl} />
+        </div>
         <div className="form-line">
           <label htmlFor="cat-name">Name</label>
           <input
@@ -78,11 +165,26 @@ const Form = ({ catForm }) => {
             value={cat.imageUrl}
           />
         </div>
-        <Link href="/">
-          <button className="btn" onClick={handleSubmit} type="submit">
-            Submit
-          </button>
-        </Link>
+        <div className="form-line">
+          <code>{message}</code>
+        </div>
+        {Object.keys(errors).map((err, index) => {
+          return (
+            <li key={index}>
+              <code>
+                {err} : {errors[err]}
+              </code>
+            </li>
+          );
+        })}
+        <hr />
+        <button className="btn" onClick={handleSubmit} type="submit">
+          Submit
+        </button>
+        <hr />
+        <button className="btn" onClick={handleDelete} type="button">
+          Delete
+        </button>
       </form>
     </div>
   );
