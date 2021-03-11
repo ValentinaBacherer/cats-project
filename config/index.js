@@ -2,4 +2,4 @@ const dev = process.env.NODE_ENV !== 'production';
 
 export const server = dev
   ? 'http://localhost:3000'
-  : 'https://heroki_deployment_create.server.com';
+  : 'https://cats-project.vercel.app';

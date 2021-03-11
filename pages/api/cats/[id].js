@@ -2,7 +2,6 @@ import dbConnect from "../../../utils/dbConnect";
 import Cat from "../../../models/Cat";
 
 const handler = async (req, res) => {
-  console.log("In dinamic API", req.method, req.body, "id", req.query.id);
   const method = req.method;
   const { id } = req.query;
 
@@ -56,8 +55,6 @@ const handler = async (req, res) => {
     case "DELETE":
       try {
         const response = await Cat.findByIdAndDelete(id).lean();
-
-        console.log("delete API", response);
         // response is null if nothing is deleted
 
         if (!response) {

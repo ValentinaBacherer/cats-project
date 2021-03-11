@@ -2,7 +2,6 @@ import Cat from "../../../models/Cat";
 import dbConnect from "../../../utils/dbConnect";
 
 const handler = async (req, res) => {
-  console.log("En API /api/cats", req.method);
   const method = req.method;
 
   await dbConnect();

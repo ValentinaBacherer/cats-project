@@ -10,7 +10,7 @@ const NewCat = () => {
   return (
     <>
       <div className="container">
-        <div className="grid">
+        <div className="flex-container">
           <Form catForm={emptyCat} />
         </div>
       </div>
